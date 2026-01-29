@@ -1,16 +1,27 @@
-# React + Vite
+# 时间线小工具
+## 项目介绍
+时间线小工具是一个基于Vue3的Web应用，用于展示用户的时间线。用户可以添加、编辑和删除时间线事件，并支持导出图片。数据存储在本地，不会上传到服务器。
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 功能
+- [x] 添加时间线事件
+- [x] 编辑时间线事件
+- [x] 删除时间线事件
+- [x] 数据存储在本地，不会上传到服务器
+- [ ] 导出图片
 
-Currently, two official plugins are available:
+## 技术栈
+- Vue
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 安装
+```npm install```
 
-## React Compiler
+## 编译、运行
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```npm run build```
 
-## Expanding the ESLint configuration
+```npm run dev```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 部署
+
+- 复制dist文件夹到服务器即可
+- 静态部署，无需服务器环境
