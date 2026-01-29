@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toJpeg, toPng } from "html-to-image";
 import {
   Search,
   Calendar,
@@ -281,13 +282,24 @@ function downloadText(filename, text) {
   URL.revokeObjectURL(url);
 }
 
+function downloadDataUrl(filename, dataUrl) {
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 export default function Timeline() {
   const [query, setQuery] = useState("");
   const [asc, setAsc] = useState(false);
   const [data, setData] = useState(() => loadEvents());
   const [modal, setModal] = useState({ open: false, mode: "add", draft: null });
+  const [exporting, setExporting] = useState(false);
 
   const fileInputRef = useRef(null);
+  const exportRef = useRef(null);
 
   useEffect(() => {
     saveEvents(data);
@@ -364,6 +376,33 @@ export default function Timeline() {
       `timeline_${new Date().toISOString().slice(0, 10)}.json`,
       JSON.stringify(data, null, 2)
     );
+  };
+
+  const onExportImage = async (format) => {
+    const node = exportRef.current;
+    if (!node) return;
+    setExporting(true);
+    try {
+      if (document.fonts?.ready) await document.fonts.ready;
+      const dateStamp = new Date().toISOString().slice(0, 10);
+      const pixelRatio = Math.min(3, window.devicePixelRatio || 2);
+      const options = {
+        pixelRatio,
+        backgroundColor: format === "jpg" ? "#ffffff" : null,
+        cacheBust: true,
+        width: node.scrollWidth || node.offsetWidth,
+        height: node.scrollHeight || node.offsetHeight,
+      };
+      const dataUrl =
+        format === "jpg"
+          ? await toJpeg(node, { ...options, quality: 0.95 })
+          : await toPng(node, options);
+      downloadDataUrl(`timeline_${dateStamp}.${format}`, dataUrl);
+    } catch (err) {
+      alert("导出图片失败：" + ((err && err.message) || String(err)));
+    } finally {
+      setExporting(false);
+    }
   };
 
   const triggerImport = () => {
@@ -529,6 +568,26 @@ export default function Timeline() {
               </button>
 
               <button
+                onClick={() => onExportImage("png")}
+                disabled={exporting}
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-xs shadow-sm hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                title="导出 PNG（透明）"
+              >
+                <Download className="h-4 w-4" />
+                {exporting ? "导出中..." : "导出PNG"}
+              </button>
+
+              <button
+                onClick={() => onExportImage("jpg")}
+                disabled={exporting}
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-xs shadow-sm hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                title="导出 JPG"
+              >
+                <Download className="h-4 w-4" />
+                {exporting ? "导出中..." : "导出JPG"}
+              </button>
+
+              <button
                 onClick={onResetToSeed}
                 className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-xs shadow-sm hover:bg-white"
                 title="恢复示例数据（覆盖本地）"
@@ -539,7 +598,7 @@ export default function Timeline() {
           </div>
         </header>
 
-        <section className="relative">
+        <section ref={exportRef} className="relative">
           <div className="pointer-events-none absolute left-4 top-0 h-full w-px bg-gradient-to-b from-transparent via-slate-200 to-transparent md:left-1/2" />
 
           <AnimatePresence initial={false}>
