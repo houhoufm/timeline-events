@@ -1,6 +1,8 @@
 # 时间轴小工具
 
 一个用于管理与展示时间轴事件的 Web 应用。支持本地持久化、导入/导出（CSV/JSON）与导出图片（PNG 透明 / JPG 白底）。
+演示：
+- [timeline](https://timeline.houjiasheng.top)
 
 ## 功能
 - [x] 添加 / 编辑 / 删除时间轴事件
@@ -8,6 +10,11 @@
 - [x] 本地存储（LocalStorage）
 - [x] 导入 / 导出 CSV、JSON
 - [x] 导出图片（PNG 透明 / JPG 白底）
+
+## 截图
+<img width="800" height="1424" alt="timeline houjiasheng top_" src="https://github.com/user-attachments/assets/ff7e1232-d40d-4336-b3e9-3b5c82d888b4" />
+<img width="800" height="1424" alt="timeline houjiasheng top_" src="https://github.com/user-attachments/assets/bde267b9-429b-4587-bb6a-6f8ad95d7bdb" />
+
 
 ## 技术栈
 - React
